@@ -2,7 +2,9 @@
     style="@style/Widget.Childproofer.AppWidget.Container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.Childproofer.AppWidgetContainer">
+    android:theme="@style/Theme.Childproofer.AppWidgetContainer"
+    android:background="#66ffffff"
+    >
 
     <ImageButton
         android:id="@+id/widget_toggle_button"
