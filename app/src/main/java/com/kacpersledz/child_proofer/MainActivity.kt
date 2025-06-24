@@ -1,11 +1,9 @@
 package com.kacpersledz.child_proofer
 
 import android.content.Context
-import android.os.Build
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.provider.Settings
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -19,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import com.kacpersledz.child_proofer.ui.theme.ChildprooferTheme
 
 class MainActivity : ComponentActivity() {
@@ -32,14 +31,19 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun hasWriteSecureSettingsPermission(context: Context): Boolean {
-        return Settings.Secure.canWrite(context)
-    }
 }
 
 @Composable
 fun PermissionCheckScreen() {
+    fun hasWriteSecureSettingsPermission(context: Context): Boolean {
+        val permissionState = ContextCompat.checkSelfPermission(
+            context,
+            android.Manifest.permission.WRITE_SECURE_SETTINGS
+        )
+        return permissionState == PackageManager.PERMISSION_GRANTED
+    }
+
+
     val context = LocalContext.current
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -50,15 +54,15 @@ fun PermissionCheckScreen() {
             verticalArrangement = Arrangement.Center
         ) {
             Button(onClick = {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    val hasPermission = (context as MainActivity).hasWriteSecureSettingsPermission(context)
-                    if (hasPermission) {
-                        Toast.makeText(context, "Permission is GRANTED!", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(context, "Permission is DENIED. Please use ADB.", Toast.LENGTH_SHORT).show()
-                    }
+                val hasPermission = hasWriteSecureSettingsPermission(context)
+                if (hasPermission) {
+                    Toast.makeText(context, "Permission is GRANTED!", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, "Feature not available for this API level", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Permission is DENIED. Please use ADB.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }) {
                 Text("Check Permission Status")
