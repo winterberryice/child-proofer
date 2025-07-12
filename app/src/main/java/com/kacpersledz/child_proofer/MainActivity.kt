@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
 
     private fun isTapGestureEnabled(context: Context): Boolean {
         return if (isSamsungDevice()) {
-            Settings.System.getInt(context.contentResolver, "double_tab_to_wake_up", 0) == 1
+            Settings.Secure.getInt(context.contentResolver, "double_tab_to_wake_up", 0) == 1
         } else {
             Settings.Secure.getInt(context.contentResolver, "doze_tap_gesture", 0) == 1
         }
@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
 
     private fun setTapGestureEnabled(context: Context, enabled: Boolean) {
         if (isSamsungDevice()) {
-            Settings.System.putInt(context.contentResolver, "double_tab_to_wake_up", if (enabled) 1 else 0)
+            Settings.Secure.putInt(context.contentResolver, "double_tab_to_wake_up", if (enabled) 1 else 0)
         } else {
             Settings.Secure.putInt(context.contentResolver, "doze_tap_gesture", if (enabled) 1 else 0)
         }
@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
 
     private fun isLiftToWakeEnabled(context: Context): Boolean {
         return if (isSamsungDevice()) {
-            Settings.System.getInt(context.contentResolver, "lift_to_wake", 0) == 1
+            Settings.Secure.getInt(context.contentResolver, "lift_to_wake", 0) == 1
         } else {
             Settings.Secure.getInt(context.contentResolver, "doze_pulse_on_pick_up", 0) == 1
         }
@@ -84,7 +84,7 @@ class MainActivity : ComponentActivity() {
 
     private fun setLiftToWakeEnabled(context: Context, enabled: Boolean) {
         if (isSamsungDevice()) {
-            Settings.System.putInt(context.contentResolver, "lift_to_wake", if (enabled) 1 else 0)
+            Settings.Secure.putInt(context.contentResolver, "lift_to_wake", if (enabled) 1 else 0)
         } else {
             Settings.Secure.putInt(
                 context.contentResolver,
