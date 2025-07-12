@@ -59,39 +59,27 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun isTapGestureEnabled(context: Context): Boolean {
-        return if (isSamsungDevice()) {
-            Settings.Secure.getInt(context.contentResolver, "double_tab_to_wake_up", 0) == 1
-        } else {
-            Settings.Secure.getInt(context.contentResolver, "doze_tap_gesture", 0) == 1
-        }
+        val settingName = if (isSamsungDevice()) "double_tab_to_wake_up" else "doze_tap_gesture"
+        return Settings.Secure.getInt(context.contentResolver, settingName, 0) == 1
     }
 
     private fun setTapGestureEnabled(context: Context, enabled: Boolean) {
-        if (isSamsungDevice()) {
-            Settings.Secure.putInt(context.contentResolver, "double_tab_to_wake_up", if (enabled) 1 else 0)
-        } else {
-            Settings.Secure.putInt(context.contentResolver, "doze_tap_gesture", if (enabled) 1 else 0)
-        }
+        val settingName = if (isSamsungDevice()) "double_tab_to_wake_up" else "doze_tap_gesture"
+        Settings.Secure.putInt(context.contentResolver, settingName, if (enabled) 1 else 0)
     }
 
     private fun isLiftToWakeEnabled(context: Context): Boolean {
-        return if (isSamsungDevice()) {
-            Settings.Secure.getInt(context.contentResolver, "lift_to_wake", 0) == 1
-        } else {
-            Settings.Secure.getInt(context.contentResolver, "doze_pulse_on_pick_up", 0) == 1
-        }
+        val settingName = if (isSamsungDevice()) "lift_to_wake" else "doze_pulse_on_pick_up"
+        return Settings.Secure.getInt(context.contentResolver, settingName, 0) == 1
     }
 
     private fun setLiftToWakeEnabled(context: Context, enabled: Boolean) {
-        if (isSamsungDevice()) {
-            Settings.Secure.putInt(context.contentResolver, "lift_to_wake", if (enabled) 1 else 0)
-        } else {
-            Settings.Secure.putInt(
-                context.contentResolver,
-                "doze_pulse_on_pick_up",
-                if (enabled) 1 else 0
-            )
-        }
+        val settingName = if (isSamsungDevice()) "lift_to_wake" else "doze_pulse_on_pick_up"
+        Settings.Secure.putInt(
+            context.contentResolver,
+            settingName,
+            if (enabled) 1 else 0
+        )
     }
 }
 
