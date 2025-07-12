@@ -47,6 +47,10 @@ class MainActivity : ComponentActivity() {
     // It's better practice to keep these helper functions in the Activity
     // so the Composable stays focused on UI.
 
+    private fun isSamsungDevice(): Boolean {
+        return android.os.Build.MANUFACTURER.equals("samsung", ignoreCase = true)
+    }
+
     private fun hasWriteSecureSettingsPermission(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
@@ -55,23 +59,39 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun isTapGestureEnabled(context: Context): Boolean {
-        return Settings.Secure.getInt(context.contentResolver, "doze_tap_gesture", 0) == 1
+        return if (isSamsungDevice()) {
+            Settings.System.getInt(context.contentResolver, "double_tab_to_wake_up", 0) == 1
+        } else {
+            Settings.Secure.getInt(context.contentResolver, "doze_tap_gesture", 0) == 1
+        }
     }
 
     private fun setTapGestureEnabled(context: Context, enabled: Boolean) {
-        Settings.Secure.putInt(context.contentResolver, "doze_tap_gesture", if (enabled) 1 else 0)
+        if (isSamsungDevice()) {
+            Settings.System.putInt(context.contentResolver, "double_tab_to_wake_up", if (enabled) 1 else 0)
+        } else {
+            Settings.Secure.putInt(context.contentResolver, "doze_tap_gesture", if (enabled) 1 else 0)
+        }
     }
 
     private fun isLiftToWakeEnabled(context: Context): Boolean {
-        return Settings.Secure.getInt(context.contentResolver, "doze_pulse_on_pick_up", 0) == 1
+        return if (isSamsungDevice()) {
+            Settings.System.getInt(context.contentResolver, "lift_to_wake", 0) == 1
+        } else {
+            Settings.Secure.getInt(context.contentResolver, "doze_pulse_on_pick_up", 0) == 1
+        }
     }
 
     private fun setLiftToWakeEnabled(context: Context, enabled: Boolean) {
-        Settings.Secure.putInt(
-            context.contentResolver,
-            "doze_pulse_on_pick_up",
-            if (enabled) 1 else 0
-        )
+        if (isSamsungDevice()) {
+            Settings.System.putInt(context.contentResolver, "lift_to_wake", if (enabled) 1 else 0)
+        } else {
+            Settings.Secure.putInt(
+                context.contentResolver,
+                "doze_pulse_on_pick_up",
+                if (enabled) 1 else 0
+            )
+        }
     }
 }
 
