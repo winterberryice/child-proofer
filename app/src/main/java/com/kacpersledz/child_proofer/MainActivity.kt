@@ -47,6 +47,10 @@ class MainActivity : ComponentActivity() {
     // It's better practice to keep these helper functions in the Activity
     // so the Composable stays focused on UI.
 
+    private fun isSamsungDevice(): Boolean {
+        return android.os.Build.MANUFACTURER.equals("samsung", ignoreCase = true)
+    }
+
     private fun hasWriteSecureSettingsPermission(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
@@ -55,21 +59,25 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun isTapGestureEnabled(context: Context): Boolean {
-        return Settings.Secure.getInt(context.contentResolver, "doze_tap_gesture", 0) == 1
+        val settingName = if (isSamsungDevice()) "double_tab_to_wake_up" else "doze_tap_gesture"
+        return Settings.Secure.getInt(context.contentResolver, settingName, 0) == 1
     }
 
     private fun setTapGestureEnabled(context: Context, enabled: Boolean) {
-        Settings.Secure.putInt(context.contentResolver, "doze_tap_gesture", if (enabled) 1 else 0)
+        val settingName = if (isSamsungDevice()) "double_tab_to_wake_up" else "doze_tap_gesture"
+        Settings.Secure.putInt(context.contentResolver, settingName, if (enabled) 1 else 0)
     }
 
     private fun isLiftToWakeEnabled(context: Context): Boolean {
-        return Settings.Secure.getInt(context.contentResolver, "doze_pulse_on_pick_up", 0) == 1
+        val settingName = if (isSamsungDevice()) "lift_to_wake" else "doze_pulse_on_pick_up"
+        return Settings.Secure.getInt(context.contentResolver, settingName, 0) == 1
     }
 
     private fun setLiftToWakeEnabled(context: Context, enabled: Boolean) {
+        val settingName = if (isSamsungDevice()) "lift_to_wake" else "doze_pulse_on_pick_up"
         Settings.Secure.putInt(
             context.contentResolver,
-            "doze_pulse_on_pick_up",
+            settingName,
             if (enabled) 1 else 0
         )
     }
